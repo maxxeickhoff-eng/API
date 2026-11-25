@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Showboard</title>
+  <meta name="description" content="Search TV shows, track episodes and explore ratings — powered by the TVmaze API.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='3' y='7' width='26' height='18' rx='4' fill='%23ffb547'/><path d='M13 12l7 4-7 4z' fill='%230b0d12'/></svg>">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="#">
+        <span class="brand-mark" aria-hidden="true">▶</span> Showboard
+      </a>
+      <nav class="nav">
+        <a href="#" data-nav="home">Discover</a>
+        <a href="#watchlist" data-nav="watchlist">Watchlist <span class="count" id="watch-count"></span></a>
+      </nav>
+      <button class="icon-btn" id="theme" type="button" aria-label="Toggle light or dark mode">◐</button>
+    </div>
+  </header>
+
+  <main id="app" class="wrap" tabindex="-1"></main>
+
+  <footer class="wrap footer">
+    Data from <a href="https://www.tvmaze.com/api" target="_blank" rel="noopener">TVmaze</a>
+    (<a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>) ·
+    Your watchlist is stored only in this browser · Applied Programming &amp; AI Fundamentals
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
