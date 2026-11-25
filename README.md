@@ -28,6 +28,7 @@ This project is the *TVmaze API* assignment: build a solution that connects to a
 | `app.js` | All logic: API calls, routing, views, watchlist storage |
 | `docs/` | Screenshots used in this README |
 | `AUDIT.md` | Publication audit: what was checked, found and fixed |
+| `LICENSE` | MIT licence for the code |
 
 ## Data collection
 
@@ -94,16 +95,12 @@ Errors are shown clearly: a show that doesn't exist, a search without results, o
 
 **Option A: just open it**
 
-1. Download this repository: green **Code** button → **Download ZIP**, then unzip it. Or clone it:
-   ```bash
-   git clone https://github.com/<your-username>/<this-repository>.git
-   ```
+1. Download this repository: green **Code** button → **Download ZIP**, then unzip it. Or copy the address shown under **Code** and clone it with `git clone` followed by that address.
 2. Double-click `index.html`. It opens in your browser and works right away.
 
-**Option B: run a small local server** (optional, closer to a real website)
+**Option B: run a small local server** (optional, closer to a real website). In a terminal inside the project folder:
 
 ```bash
-cd <this-repository>
 python3 -m http.server 8000
 ```
 
@@ -148,3 +145,7 @@ Then open <http://localhost:8000>.
 - **Reference:** before starting I looked at an earlier simple TVmaze example (a search page with a cast list and an episode checklist) to see the scope of the assignment. Showboard's code, design and features (schedule, embedded single request, ratings map, watchlist with progress, routing) were written fresh for this project.
 - **Documentation used:** the [TVmaze API documentation](https://www.tvmaze.com/api) and the MDN Web Docs for `fetch`, `localStorage` and `DOMParser`.
 - **No external code or libraries** are used. Fonts are the system fonts, so the page loads nothing except the TVmaze data and images.
+
+## License
+
+Code: [MIT](LICENSE). Show data and images: TVmaze, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).

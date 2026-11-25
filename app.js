@@ -38,6 +38,17 @@ function plainText(html) {
   return new DOMParser().parseFromString(html || "", "text/html").body.textContent.trim();
 }
 
+// Links and images come from the API. Only normal web addresses (http/https) are used, so a broken or
+// malicious value (e.g. "javascript:...") can never end up in a link or a CSS url().
+function safeUrl(value) {
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" || url.protocol === "http:" ? url.href : null;
+  } catch {
+    return null;
+  }
+}
+
 const year = (date) => (date ? date.slice(0, 4) : "");
 const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
 const episodeCode = (ep) => `S${String(ep.season).padStart(2, "0")}E${ep.number == null ? "–" : String(ep.number).padStart(2, "0")}`;
@@ -140,10 +151,11 @@ function updateWatchCount() {
 // ---------- Reusable pieces ----------
 
 function posterBox(image, name, ...overlays) {
+  const src = safeUrl(image);
   return h(
     "div",
     { class: "poster" },
-    image ? h("img", { src: image, alt: "", loading: "lazy" }) : h("div", { class: "noimg" }, name),
+    src ? h("img", { src, alt: "", loading: "lazy" }) : h("div", { class: "noimg" }, name),
     ...overlays
   );
 }
@@ -446,10 +458,14 @@ function showHero(show, episodeCount) {
   });
   drawSave();
 
+  const backdrop = safeUrl(show.image?.original);
+  const officialSite = safeUrl(show.officialSite);
+  const tvmazePage = safeUrl(show.url);
+
   return h(
     "section",
     { class: "show-hero" },
-    show.image ? h("div", { class: "backdrop", style: `background-image:url("${show.image.original}")` }) : null,
+    backdrop ? h("div", { class: "backdrop", style: `background-image:url(${JSON.stringify(backdrop)})` }) : null,
     h(
       "a",
       {
@@ -485,8 +501,8 @@ function showHero(show, episodeCount) {
           "div",
           { class: "actions" },
           saveBtn,
-          show.officialSite ? h("a", { class: "btn ghost", href: show.officialSite, target: "_blank", rel: "noopener" }, "Official site ↗") : null,
-          h("a", { class: "btn ghost", href: show.url, target: "_blank", rel: "noopener" }, "TVmaze ↗")
+          officialSite ? h("a", { class: "btn ghost", href: officialSite, target: "_blank", rel: "noopener" }, "Official site ↗") : null,
+          tvmazePage ? h("a", { class: "btn ghost", href: tvmazePage, target: "_blank", rel: "noopener" }, "TVmaze ↗") : null
         )
       )
     )
@@ -686,7 +702,7 @@ function castTab(cast) {
       h(
         "div",
         { class: "person" },
-        h("div", { class: "face" }, person.image ? h("img", { src: person.image.medium, alt: "", loading: "lazy" }) : person.name[0]),
+        h("div", { class: "face" }, safeUrl(person.image?.medium) ? h("img", { src: safeUrl(person.image.medium), alt: "", loading: "lazy" }) : person.name[0]),
         h("b", {}, person.name),
         h("span", {}, `as ${character.name}`)
       )
