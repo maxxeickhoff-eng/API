@@ -110,22 +110,21 @@ Then open <http://localhost:8000>.
 
 ## Learning
 
-**What I learned:**
+### What I learned
 
-- **REST APIs in practice:** reading API documentation, building request URLs, and turning JSON into a user interface with `fetch()` and `async`/`await`.
-- **Fewer requests with embedding:** TVmaze's `embed[]` parameter combines related data into one answer, so a show page needs one request instead of four.
-- **Single-page app basics:** the part of the address after `#` decides which view is shown (`#search/…`, `#show/…`, `#watchlist`). That gives working back buttons and shareable links without any framework.
-- **Storing state in the browser:** `localStorage` holds the watchlist; each read and write is wrapped in `try/catch`, because storage can be blocked in private mode.
+This was the first time I built something on a real REST API, and getting started was easier than I expected. TVmaze needs no key and allows requests straight from the browser, so the whole app is just three files.
 
-**Challenges and how I approached them:**
+The part that needed thinking was how to ask for the data. A show page needs the show, its episodes, its cast and the next episode. Asked separately, that is four requests per page. TVmaze's `embed[]` parameter returns all of it in one answer, which makes the page faster and keeps the app far away from the limit of about 20 requests per 10 seconds. I also learned how a single-page app can work without a framework: the part of the address after `#` decides what you see (`#search/...`, `#show/82/ratings`). Because of that, the back button works and I can send someone a link to one specific tab.
 
-1. **HTML inside the API data.** Summaries come as HTML (`<p><b>…</b></p>`). Inserting that directly with `innerHTML` would be a security risk, because anything inside it would run on the page. I parse it with `DOMParser`, keep only the text, and create all elements through a small helper function that only ever uses text nodes.
-2. **The ratings map looked flat.** My first version coloured ratings on a fixed scale from 6 to 9.5, but most shows only vary by one or two points, so almost every square came out the same yellow-green. I changed the scale to stretch from each show's weakest to its best episode and show those two values in the legend. Now the drop in *Game of Thrones* season 8 jumps out.
-3. **Rate limits and repeated requests.** Instead of making many requests, I used `embed[]`, cached answers in memory, and added a retry for HTTP 429.
-4. **Testing details.** While testing in the browser I found three bugs and fixed them:
-   - An empty watchlist printed the word "null" on the home page.
-   - Dates appeared in German because the browser's language was used. They are now always English to match the rest of the app.
-   - The browser kept serving the old JavaScript file from its cache. A hard reload showed my changes.
+Storing the watchlist in `localStorage` showed me that browser storage isn't guaranteed. It can be blocked in private mode, so every read and write sits in a `try/catch`, and the app still works if saving fails.
+
+### Challenges I ran into
+
+The ratings map looked boring at first. It used a fixed colour scale from 6 to 9.5, but most shows only vary by one or two points, so almost every square came out the same yellow-green. We changed the scale to run from each show's weakest episode to its best one and put those two numbers in the legend. Now the drop in *Game of Thrones* season 8 is the first thing you see (5.3 for the finale, in red).
+
+API data can't be trusted blindly. Summaries arrive as HTML, and putting them into the page with `innerHTML` would let anything inside them run. So the app keeps only the text. The audit then found a second gap: links and images from the API were used without checking them. Now only normal `http`/`https` addresses are accepted. My first version of that check only allowed `https`, and the official site link of *Breaking Bad* disappeared, because AMC's address still starts with `http://`. That was a good reminder to test again after every fix, even a small one.
+
+Testing in the browser also turned up three small bugs: an empty watchlist printed the word "null" on the home page, dates came out in German because my browser is set to German, and the browser kept serving the old JavaScript file from its cache, so a hard reload was needed to see changes.
 
 ## Limitations and assistance
 
