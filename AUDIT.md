@@ -17,6 +17,7 @@ It is sanitized: no secret values or personal contact details appear here.
 | Audit 1 | 2026-11-25, read-only (no files changed, no code run, nothing committed) |
 | Fixes | 2026-11-25, after reviewing the findings |
 | Audit 2 | 2026-11-25, the same checks repeated after the fixes |
+| Audit 3 | 2026-11-25, logged-out check of the published repository |
 
 ## What was checked
 
@@ -77,12 +78,26 @@ It is sanitized: no secret values or personal contact details appear here.
 
 ## Remaining items
 
-- [ ] **Make the repository public** and check that it opens while logged out of GitHub.
+- [x] **Make the repository public** and check that it opens while logged out of GitHub (see Audit 3).
 - [ ] Optional: switch on GitHub Pages (Settings → Pages → `main` / root) for a live demo link.
+
+## Audit 3: check after publishing
+
+This check was run without logging in to GitHub, on a fresh clone of the public repository.
+
+| Check | Result |
+|---|---|
+| Repository page while logged out | Opens (HTTP 200) |
+| Branches on GitHub | `main` only, matching the local commit |
+| Files in the public repository | 10, exactly the files listed in the README's project structure |
+| `.env` or other local files | Not present |
+| Commit emails | Only the GitHub `noreply` address |
+| Secret patterns in the full public history | None found |
+| Screenshots used in the README | All reachable (HTTP 200) |
 
 ## What could not be verified
 
-- **The repository on GitHub itself:** visibility, branches, other settings. It hadn't been pushed at the time of the audit.
+- **GitHub settings beyond the code:** releases, issues, Actions and wiki. Visibility and branches were checked in Audit 3.
 - **Data from TVmaze:** whether every image and text TVmaze returns is correctly licensed. The app relies on TVmaze's own licensing.
 - **Other browsers:** the app was tested in Chrome only (desktop and phone size). Firefox and Safari were not tested.
 - **Secrets in formats** that the pattern scan doesn't cover.
